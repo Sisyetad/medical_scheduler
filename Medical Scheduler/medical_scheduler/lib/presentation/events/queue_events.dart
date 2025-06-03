@@ -9,6 +9,6 @@ class UpdateQueueStatus extends DoctorQueueEvent {
 }
 
 class NavigateToPatientHistory extends DoctorQueueEvent {
-  final int patientId;
-  NavigateToPatientHistory(this.patientId);
+  final int queueId;
+  NavigateToPatientHistory(this.queueId);
 }
