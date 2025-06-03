@@ -122,7 +122,11 @@ class _PatientHistoryState extends ConsumerState<PatientHistoryPage> {
 
                       const SizedBox(height: 20),
 
-                      const Completed(),
+                      Consumer(
+                        builder: (context, ref, child) => 
+                          Completed(
+                            completedCount: state.diagnosisList.length,
+                          ),),
 
                       const SizedBox(height: 20),
 
@@ -153,7 +157,7 @@ class _PatientHistoryState extends ConsumerState<PatientHistoryPage> {
 
                       const SizedBox(height: 30),
 
-                      const BackToHome(),
+                      BackToHome(roleId: 4,),
                     ],
                   ),
                 ),

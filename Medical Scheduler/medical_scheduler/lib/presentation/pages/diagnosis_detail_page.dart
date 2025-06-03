@@ -56,7 +56,7 @@ class _DiagnosisState extends ConsumerState<DiagnosisSummaryScreen> {
                 else
                   const Text("No diagnosis found."),
                 const SizedBox(height: 20),
-                const BackToHome(),
+                const BackToHome(roleId: 4,),
               ],
             ),
           ),
