@@ -16,9 +16,6 @@ class DoctorQueueNotifier extends StateNotifier<QueueUiState> {
       await _fetchQueues();
     } else if (event is UpdateQueueStatus) {
       await _updateQueueStatus(event.queueId, event.status);
-    } else if (event is NavigateToPatientHistory) {
-      // Handle navigation to patient history if needed
-      // This could be implemented in the UI layer instead
     }
   }
 
