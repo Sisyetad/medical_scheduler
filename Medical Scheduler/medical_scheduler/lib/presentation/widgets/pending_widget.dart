@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medical_scheduler/presentation/Provider/providers/queue_provider.dart';
 
-class Pending extends ConsumerWidget {
-  const Pending({super.key});
+class Pending extends StatelessWidget {
+  final int pendingCount;
+  const Pending({super.key, required this.pendingCount});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final pending = ref.watch(doctorQueueNotifierProvider.select((state) => state.pending));
+  Widget build(BuildContext context) {
 
     return Container(
       height: 100,
@@ -29,7 +27,7 @@ class Pending extends ConsumerWidget {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Text("$pending", style: const TextStyle(fontSize: 30)),
+              child: Text("$pendingCount", style: const TextStyle(fontSize: 30)),
             ),
           ),
         ],

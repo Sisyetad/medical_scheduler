@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medical_scheduler/presentation/Provider/providers/queue_provider.dart';
 
-class Resolved extends ConsumerWidget {
-  const Resolved({super.key});
+class Resolved extends StatelessWidget {
+  final int resolvedCount; // This should be replaced with the actual resolved count from the provide
+  const Resolved({super.key, required this.resolvedCount});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final resolved = ref.watch(doctorQueueNotifierProvider.select((state) => state.resolvedPending));
+  Widget build(BuildContext context) {
 
     return Container(
       height: 100,
@@ -29,7 +27,7 @@ class Resolved extends ConsumerWidget {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Text("$resolved", style: const TextStyle(fontSize: 30)),
+              child: Text("$resolvedCount", style: const TextStyle(fontSize: 30)),
             ),
           ),
         ],

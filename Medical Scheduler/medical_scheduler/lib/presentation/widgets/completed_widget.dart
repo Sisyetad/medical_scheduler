@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medical_scheduler/presentation/Provider/providers/queue_provider.dart';
 
-class Completed extends ConsumerWidget {
-  const Completed({super.key});
+class Completed extends StatelessWidget {
+  final int completedCount;
+  const Completed({super.key, required this.completedCount});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final completed = ref.watch(doctorQueueNotifierProvider.select((state) => state.completed));
-
+  Widget build(BuildContext context) {
     return Container(
       height: 100,
       width: 308,
@@ -28,7 +25,10 @@ class Completed extends ConsumerWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 60.0),
-            child: Text("$completed", style: const TextStyle(fontSize: 30)),
+            child: Text(
+              "$completedCount",
+              style: const TextStyle(fontSize: 30),
+            ),
           ),
         ],
       ),
