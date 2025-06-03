@@ -42,27 +42,28 @@ class AuthViewModel extends StateNotifier<AuthUiState> {
     }
   }
 
-  Future<void> checkLoginStatus(BuildContext context) async {
-    state = state.copyWith(isLoading: true);
+Future<void> checkLoginStatus(BuildContext context) async {
+  state = state.copyWith(isLoading: true);
 
-    try {
-      final token = await storage.read(key: 'auth_token');
+  try {
+    final token = await storage.read(key: 'auth_token');
 
-      if (token == null) {
-        context.go('/auth');
-        return;
-      }
-      final user = await getUserUseCase.call(token);
-      state = state.copyWith(user: user, isLoading: false);
-      _navigateBasedOnRole(context, user.role.roleId);
+    if (token == null) {
+      state = state.copyWith(isLoading: false); // 👈 Add this line
+      context.go('/auth');
+      return;
+    }
 
-          } catch (e) {
-            state = state.copyWith(isLoading: false, error: e.toString());
-            context.go('/auth');
-          }
-        }
+    final user = await getUserUseCase.call(token);
+    state = state.copyWith(user: user, isLoading: false);
+    _navigateBasedOnRole(context, user.role.roleId);
 
-      }
+  } catch (e) {
+    state = state.copyWith(isLoading: false, error: e.toString());
+    context.go('/auth');
+  }
+}
+
 
 
 void _navigateBasedOnRole(BuildContext context, int roleId) {
@@ -79,4 +80,6 @@ void _navigateBasedOnRole(BuildContext context, int roleId) {
     default:
       context.go('/auth');
   }
+}
+
 }

@@ -17,7 +17,8 @@ class DoctorQueueNotifier extends StateNotifier<QueueUiState> {
     } else if (event is UpdateQueueStatus) {
       await _updateQueueStatus(event.queueId, event.status);
     } else if (event is NavigateToPatientHistory) {
-
+      // Handle navigation to patient history if needed
+      // This could be implemented in the UI layer instead
     }
   }
 
@@ -49,40 +50,52 @@ class DoctorQueueNotifier extends StateNotifier<QueueUiState> {
     }
   }
 
-  Future<void> _updateQueueStatus(int queueId, int newStatus) async {
-    try {
-      state = state.copyWith(isLoading: true);
+Future<void> _updateQueueStatus(int queueId, int newStatus) async {
+  try {
+    state = state.copyWith(isLoading: true);
 
-      await updateQueueUseCase(
-        UpdateQueueParams(queueId: queueId, status: newStatus),
-      );
+    await updateQueueUseCase(
+      UpdateQueueParams(queueId: queueId, status: newStatus),
+    );
 
-      final updatedQueues =
-          state.queues.map((queue) {
-            if (queue.queueId == queueId) {
-              return queue.copyWith(status: newStatus);
-            }
-            return queue;
-          }).toList();
-          
-      final completed = updatedQueues.where((q) => q.status == 3).length;
-      final pending = updatedQueues.where((q) => q.status == 1).length;
-      final resolvedPending = updatedQueues.where((q) => q.status == 2).length;
+    final updatedQueues = state.queues.map((queue) {
+      if (queue.queueId == queueId) {
+        return queue.copyWith(status: newStatus);
+      }
+      return queue;
+    }).toList();
 
-      state = state.copyWith(
-        isLoading: false,
-        queues: updatedQueues,
-        completed: completed,
-        pending: pending,
-        resolvedPending: resolvedPending,
-        isSuccess: true,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-        isSuccess: false,
-      );
+    final oldQueue = state.queues.firstWhere((q) => q.queueId == queueId);
+    final oldStatus = oldQueue.status;
+
+    int completed = state.completed;
+    int pending = state.pending;
+    int resolved = state.resolvedPending;
+
+    if (oldStatus != newStatus) {
+      if (oldStatus == 1) pending--;
+      if (oldStatus == 2) resolved--;
+      if (oldStatus == 3) completed--;
+
+      if (newStatus == 1) pending++;
+      if (newStatus == 2) resolved++;
+      if (newStatus == 3) completed++;
     }
+
+    state = state.copyWith(
+      isLoading: false,
+      queues: updatedQueues,
+      completed: completed,
+      pending: pending,
+      resolvedPending: resolved,
+      isSuccess: true,
+    );
+  } catch (e) {
+    state = state.copyWith(
+      isLoading: false,
+      error: e.toString(),
+      isSuccess: false,
+    );
   }
+}
 }
